@@ -583,8 +583,8 @@ public:
 
 	void mouse_add_new_tempo_event (Temporal::timepos_t where);
 	void mouse_add_new_meter_event (Temporal::timepos_t where);
-	void edit_tempo_section (Temporal::TempoPoint*);
-	void edit_meter_section (Temporal::MeterPoint*);
+	void edit_tempo_section (Temporal::TempoPoint&);
+	void edit_meter_section (Temporal::MeterPoint&);
 
 	void add_region_marker ();
 	void clear_region_markers ();
