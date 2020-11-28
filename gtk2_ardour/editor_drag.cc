@@ -3683,7 +3683,15 @@ TempoMarkerDrag::finished (GdkEvent* event, bool movement_occurred)
 		return;
 	}
 
+	/* push the current state of our writable map copy */
+
 	TempoMap::SharedPtr map (TempoMap::use());
+
+	TempoMap::update (map);
+
+	/* fetch it back into our local copy */
+
+	map = TempoMap::use();
 
 	XMLNode &after = map->get_state();
 
