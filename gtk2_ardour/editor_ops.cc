@@ -7041,7 +7041,7 @@ Editor::define_one_bar (timepos_t const & start, timepos_t const & end)
 {
 	timecnt_t length = start.distance (end);
 
-	TempoMap::SharedPtr tmap (TempoMap::use());
+	TempoMap::SharedPtr tmap (TempoMap::write_copy());
 	const Meter& m (tmap->meter_at (start));
 
 	/* length = 1 bar */
@@ -7126,6 +7126,8 @@ Editor::define_one_bar (timepos_t const & start, timepos_t const & end)
 
 	_session->add_command (new MementoCommand<Temporal::TempoMap> (new Temporal::TempoMap::MementoBinder(), &before, &after));
 	commit_reversible_command ();
+
+	TempoMap::update (tmap);
 }
 
 void
@@ -8058,12 +8060,14 @@ Editor::insert_time (
 			begin_reversible_command (_("insert time"));
 			in_command = true;
 		}
-		TempoMap::SharedPtr tmap (TempoMap::use());
+		TempoMap::SharedPtr tmap (TempoMap::write_copy());
 
 		XMLNode& before (tmap->get_state());
 		tmap->insert_time (pos, samples);
 		XMLNode& after (tmap->get_state());
 		_session->add_command (new MementoCommand<Temporal::TempoMap> (new Temporal::TempoMap::MementoBinder(), &before, &after));
+
+		TempoMap::update (tmap);
 	}
 
 	if (in_command) {
@@ -8234,7 +8238,7 @@ Editor::remove_time (timepos_t const & pos, timecnt_t const & duration, InsertTi
 	}
 
 	if (tempo_too) {
-		TempoMap::SharedPtr tmap (TempoMap::use());
+		TempoMap::SharedPtr tmap (TempoMap::write_copy());
 		XMLNode& before (tmap->get_state());
 
 		if (tmap->remove_time (pos, duration)) {
@@ -8244,6 +8248,8 @@ Editor::remove_time (timepos_t const & pos, timecnt_t const & duration, InsertTi
 			}
 			XMLNode& after (tmap->get_state());
 			_session->add_command (new MementoCommand<Temporal::TempoMap> (new Temporal::TempoMap::MementoBinder(), &before, &after));
+
+			TempoMap::update (tmap);
 		}
 	}
 
