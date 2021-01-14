@@ -282,6 +282,24 @@ protected:
 	friend class Session;
 
 protected:
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+=======
+>>>>>>> Revert "NO-OP: code formatting and cleanup, thanks clang-format"
+	class ThawList : public RegionList {
+		public:
+			void add (boost::shared_ptr<Region> r)
+			{
+				if (std::find (begin(), end(), r) != end ()) {
+					return;
+				}
+				r->suspend_property_changes ();
+				push_back (r);
+			}
+>>>>>>> 0bbe6796b9 (Revert "NO-OP: code formatting and cleanup, thanks clang-format")
 
 	class RegionReadLock : public Glib::Threads::RWLock::ReaderLock
 	{
