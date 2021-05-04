@@ -281,26 +281,10 @@ protected:
 	friend class Session;
 
 protected:
-	class ThawList : public RegionList {
+	class RegionReadLock : public Glib::Threads::RWLock::ReaderLock {
 		public:
-			void add (boost::shared_ptr<Region> r)
-			{
-				if (std::find (begin(), end(), r) != end ()) {
-					return;
-				}
-				r->suspend_property_changes ();
-				push_back (r);
-			}
-	};
-
-	class RegionReadLock : public Glib::Threads::RWLock::ReaderLock
-	{
-	public:
-		RegionReadLock (Playlist* pl)
-		    : Glib::Threads::RWLock::ReaderLock (pl->region_lock)
-		{
-		}
-		~RegionReadLock () {}
+			RegionReadLock (Playlist *pl) : Glib::Threads::RWLock::ReaderLock (pl->region_lock) {}
+			~RegionReadLock() {}
 	};
 
 	class RegionWriteLock : public Glib::Threads::RWLock::WriterLock
